@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { getAllPosts } from "@/lib/posts";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,11 +20,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const posts = getAllPosts();
+
   return (
     <html lang="zh-CN" className={`${inter.className} antialiased`}>
       <body>
         <ThemeProvider>
-          <SiteHeader />
+          <SiteHeader posts={posts} />
           <main>{children}</main>
           <SiteFooter />
         </ThemeProvider>

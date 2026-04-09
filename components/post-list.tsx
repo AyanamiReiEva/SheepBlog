@@ -9,11 +9,30 @@ interface PostListProps {
 
 export function PostList({ posts }: PostListProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {posts.map((post) => (
         <article key={post.slug} style={{ cursor: 'pointer' }}>
           <Link href={`/posts/${post.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              padding: '24px',
+              border: '1px solid var(--color-border)',
+              borderRadius: '8px',
+              backgroundColor: 'var(--color-background)',
+              transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-primary)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-border)';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}>
               <time style={{
                 fontSize: '14px',
                 color: 'var(--color-muted-foreground)',

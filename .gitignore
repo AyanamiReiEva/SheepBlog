@@ -46,3 +46,6 @@ next-env.d.ts
 
 # config secrets (if needed)
 # config/secrets.ts
+
+# temp files
+/tmp_files/

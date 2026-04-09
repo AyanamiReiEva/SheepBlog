@@ -17,7 +17,11 @@ export function PostContent({ metadata, content }: PostContentProps) {
     }}>
       <BackLink href="/">← 返回首页</BackLink>
 
-      <div style={{ marginTop: '32px' }}>
+      <div style={{
+        borderTop: '1px solid var(--color-border)',
+        marginTop: '24px',
+        paddingTop: '32px',
+      }}>
         <div dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
       </div>
     </article>

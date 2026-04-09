@@ -55,7 +55,15 @@ export function Search({ posts }: SearchProps) {
             setQuery(e.target.value);
             setIsOpen(true);
           }}
-          onFocus={() => setIsOpen(true)}
+          onFocus={(e) => {
+            setIsOpen(true);
+            e.currentTarget.style.borderColor = 'var(--color-primary)';
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(30, 58, 95, 0.1)';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = 'var(--color-border)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
           style={{
             width: '200px',
             padding: '8px 12px 8px 32px',
@@ -66,14 +74,6 @@ export function Search({ posts }: SearchProps) {
             color: 'var(--color-foreground)',
             outline: 'none',
             transition: 'border-color 0.2s, box-shadow 0.2s',
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = 'var(--color-primary)';
-            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(30, 58, 95, 0.1)';
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = 'var(--color-border)';
-            e.currentTarget.style.boxShadow = 'none';
           }}
         />
         <svg

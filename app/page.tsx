@@ -17,7 +17,7 @@ export default function Home() {
           marginBottom: '16px',
           marginTop: 0,
           fontFamily: 'var(--font-serif)',
-        }}>欢迎来到我的博客</h1>
+        }}>欢迎来到 SheepBlog</h1>
         <p style={{
           color: 'var(--color-muted-foreground)',
           lineHeight: 1.7,

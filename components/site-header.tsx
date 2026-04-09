@@ -32,11 +32,27 @@ export function SiteHeader() {
           textDecoration: 'none',
           color: 'var(--color-foreground)',
           transition: 'color 0.2s',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
         }}
         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-primary)'}
         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-foreground)'}
         >
-          我的博客
+          <svg width="24" height="24" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="32" cy="38" rx="20" ry="16" fill="white" stroke="currentColor" strokeWidth="2"/>
+            <circle cx="32" cy="24" r="12" fill="white" stroke="currentColor" strokeWidth="2"/>
+            <ellipse cx="20" cy="16" rx="4" ry="6" fill="white" stroke="currentColor" strokeWidth="2"/>
+            <ellipse cx="44" cy="16" rx="4" ry="6" fill="white" stroke="currentColor" strokeWidth="2"/>
+            <circle cx="27" cy="22" r="2" fill="currentColor"/>
+            <circle cx="37" cy="22" r="2" fill="currentColor"/>
+            <ellipse cx="32" cy="27" rx="2" ry="1.5" fill="currentColor"/>
+            <path d="M29 30 Q32 33 35 30" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+            <circle cx="22" cy="36" r="2" fill="currentColor" opacity="0.3"/>
+            <circle cx="42" cy="36" r="2" fill="currentColor" opacity="0.3"/>
+            <circle cx="32" cy="44" r="2" fill="currentColor" opacity="0.3"/>
+          </svg>
+          SheepBlog
         </Link>
         <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
           <Link href="/" style={{

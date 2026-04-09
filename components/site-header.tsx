@@ -17,9 +17,9 @@ export function SiteHeader() {
       backdropFilter: 'blur(8px)',
     }}>
       <div style={{
-        maxWidth: '720px',
+        maxWidth: '900px',
         margin: '0 auto',
-        padding: '0 16px',
+        padding: '0 24px',
         height: '56px',
         display: 'flex',
         alignItems: 'center',
@@ -60,6 +60,17 @@ export function SiteHeader() {
           onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-foreground)'}
           >
             关于
+          </Link>
+          <Link href="/changelog" style={{
+            fontSize: '14px',
+            textDecoration: 'none',
+            color: 'var(--color-foreground)',
+            transition: 'color 0.2s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-primary)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-foreground)'}
+          >
+            改动日志
           </Link>
           <button
             onClick={toggleTheme}

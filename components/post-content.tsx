@@ -17,48 +17,7 @@ export function PostContent({ metadata, content }: PostContentProps) {
     }}>
       <BackLink href="/">← 返回首页</BackLink>
 
-      <header style={{ marginBottom: '32px' }}>
-        <time style={{
-          fontSize: '14px',
-          color: 'var(--color-muted-foreground)',
-        }}>
-          {new Date(metadata.date).toLocaleDateString("zh-CN", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </time>
-        <h1 style={{
-          fontSize: '30px',
-          fontWeight: 600,
-          fontFamily: 'var(--font-serif)',
-          marginTop: '8px',
-          marginBottom: '16px',
-        }}>{metadata.title}</h1>
-        {metadata.tags.length > 0 && (
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {metadata.tags.map((tag) => (
-              <span
-                key={tag}
-                style={{
-                  fontSize: '12px',
-                  padding: '4px 8px',
-                  backgroundColor: 'var(--color-muted)',
-                  color: 'var(--color-muted-foreground)',
-                  borderRadius: '3px',
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </header>
-
-      <div style={{
-        borderTop: '1px solid var(--color-border)',
-        paddingTop: '32px',
-      }}>
+      <div style={{ marginTop: '32px' }}>
         <div dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
       </div>
     </article>

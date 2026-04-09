@@ -6,7 +6,6 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 const inter = Inter({
-  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -21,11 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+    <html lang="zh-CN" className={`${inter.className} antialiased`}>
+      <body>
         <ThemeProvider>
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main>{children}</main>
           <SiteFooter />
         </ThemeProvider>
       </body>

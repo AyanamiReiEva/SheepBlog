@@ -1,27 +1,45 @@
-import Link from "next/link";
+import { BackLink } from "@/components/back-link";
 
 export default function AboutPage() {
   return (
-    <div className="max-w-content mx-auto px-4 py-12">
-      <Link href="/" className="text-sm text-[var(--primary)] hover:underline mb-8 inline-block">
-        ← 返回首页
-      </Link>
+    <div style={{
+      maxWidth: '720px',
+      margin: '0 auto',
+      padding: '48px 16px',
+    }}>
+      <BackLink href="/">← 返回首页</BackLink>
 
-      <h1 className="text-3xl font-serif font-semibold mb-8">关于我</h1>
+      <h1 style={{
+        fontSize: '30px',
+        fontWeight: 600,
+        fontFamily: 'var(--font-serif)',
+        marginBottom: '32px',
+        marginTop: 0,
+      }}>关于我</h1>
 
-      <div className="prose prose-gray dark:prose-invert max-w-none space-y-4">
-        <p className="leading-relaxed">
+      <div style={{ lineHeight: 1.7 }}>
+        <p style={{ marginBottom: '16px', marginTop: 0 }}>
           你好！欢迎来到我的个人博客。
         </p>
-        <p className="leading-relaxed">
-          这是一个使用 Next.js 构建的现代化博客系统，采用极简设计风格，专注于内容阅读体验。
+        <p style={{ marginBottom: '16px', marginTop: 0 }}>
+          这是一个使用 Next.js 16 构建的现代化博客系统，采用极简设计风格，专注于内容阅读体验。
         </p>
-        <h2 className="text-2xl font-serif font-semibold mt-8 mb-4">技术栈</h2>
-        <ul className="list-disc pl-6 space-y-2 text-[var(--muted-foreground)]">
-          <li>Next.js 16</li>
-          <li>TypeScript</li>
-          <li>Tailwind CSS</li>
-          <li>Shadcn/ui</li>
+        <h2 style={{
+          fontSize: '24px',
+          fontWeight: 600,
+          fontFamily: 'var(--font-serif)',
+          marginTop: '32px',
+          marginBottom: '16px',
+        }}>技术栈</h2>
+        <ul style={{
+          paddingLeft: '24px',
+          color: 'var(--color-muted-foreground)',
+          margin: 0,
+        }}>
+          <li style={{ marginBottom: '8px' }}>Next.js 16</li>
+          <li style={{ marginBottom: '8px' }}>TypeScript</li>
+          <li style={{ marginBottom: '8px' }}>Tailwind CSS</li>
+          <li style={{ marginBottom: '8px' }}>Shadcn/ui</li>
         </ul>
       </div>
     </div>

@@ -1,0 +1,46 @@
+
+> myblog@0.1.0 dev
+> next dev -H 0.0.0.0
+
+⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://0.0.0.0:3001
+✓ Ready  GET / 200 in 311ms (next.js: 19ms, application-code: 291ms)
+ GET / 200 in 194ms (next.js: 21ms, application-code: 173ms)
+ GET / 200 in 212ms (next.js: 6ms, application-code: 206ms)
+ GET / 200 in 298ms (next.js: 18ms, application-code: 280ms)
+⚠ Blocked cross-origin request to Next.js dev resource /_next/webpack-hmr from "123.57.109.231".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['123.57.109.231'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+Error: Route "/posts/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PostPage (app/posts/[slug]/page.tsx:15:39)
+  13 |
+  14 |   try {
+> 15 |     metadata = getPostMetadata(params.slug);
+     |                                       ^
+  16 |     content = getPostContent(params.slug);
+  17 |   } catch {
+  18 |     notFound();
+ GET /posts/getting-started-with-nextjs 404 in 2.6s (next.js: 2.2s, generate-params: 948ms, application-code: 427ms)
+ GET / 200 in 137ms (next.js: 5ms, application-code: 132ms)
+Error: Cannot apply unknown utility class `font-sans`. Are you using CSS modules or similar and missing `@reference`? https://tailwindcss.com/docs/functions-and-directives#reference-directive
+    [2m[at onInvalidCandidate (/home/admin/myblog/node_modules/tailwindcss/dist/lib.js:21:1314)][0m
+    [2m[at Ee (/home/admin/myblog/node_modules/tailwindcss/dist/lib.js:16:37066)][0m
+    [2m[at /home/admin/myblog/node_modules/tailwindcss/dist/lib.js:21:355][0m
+    [2m[at _r (/home/admin/myblog/node_modules/tailwindcss/dist/lib.js:3:1733)][0m
+    [2m[at I (/home/admin/myblog/node_modules/tailwindcss/dist/lib.js:3:1377)][0m
+    [2m[at Te (/home/admin/myblog/node_modules/tailwindcss/dist/lib.js:21:172)][0m
+    [2m[at mn (/home/admin/myblog/node_modules/tailwindcss/dist/lib.js:38:294)][0m
+    [2m[at process.processTicksAndRejections (node:internal/process/task_queues:103:5)][0m
+    [2m[at async gn (/home/admin/myblog/node_modules/tailwindcss/dist/lib.js:38:631)][0m
+    [2m[at async Xr (/home/admin/myblog/node_modules/@tailwindcss/node/dist/index.js:10:3416)][0m
+[?25h

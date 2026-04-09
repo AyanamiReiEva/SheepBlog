@@ -3,29 +3,85 @@
 import Link from "next/link";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./theme-provider";
-import { Button } from "./ui/button";
 
 export function SiteHeader() {
-  const { toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="border-b sticky top-0 z-50 bg-[var(--background)]">
-      <div className="max-w-content mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="text-lg font-serif font-semibold hover:text-[var(--primary)] transition-colors">
+    <header style={{
+      borderBottom: '1px solid var(--color-border)',
+      position: 'sticky',
+      top: 0,
+      zIndex: 50,
+      backgroundColor: 'var(--color-background)',
+      backdropFilter: 'blur(8px)',
+    }}>
+      <div style={{
+        maxWidth: '720px',
+        margin: '0 auto',
+        padding: '0 16px',
+        height: '56px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
+        <Link href="/" style={{
+          fontSize: '18px',
+          fontWeight: 600,
+          fontFamily: 'var(--font-serif)',
+          textDecoration: 'none',
+          color: 'var(--color-foreground)',
+          transition: 'color 0.2s',
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-primary)'}
+        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-foreground)'}
+        >
           我的博客
         </Link>
-        <nav className="flex items-center gap-6">
-          <Link href="/" className="text-sm hover:text-[var(--primary)] transition-colors">
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <Link href="/" style={{
+            fontSize: '14px',
+            textDecoration: 'none',
+            color: 'var(--color-foreground)',
+            transition: 'color 0.2s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-primary)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-foreground)'}
+          >
             首页
           </Link>
-          <Link href="/about" className="text-sm hover:text-[var(--primary)] transition-colors">
+          <Link href="/about" style={{
+            fontSize: '14px',
+            textDecoration: 'none',
+            color: 'var(--color-foreground)',
+            transition: 'color 0.2s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-primary)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-foreground)'}
+          >
             关于
           </Link>
-          <Button variant="ghost" size="icon" onClick={toggleTheme}>
-            <Sun className="h-4 w-4 hidden dark:block" />
-            <Moon className="h-4 w-4 block dark:hidden" />
-            <span className="sr-only">切换主题</span>
-          </Button>
+          <button
+            onClick={toggleTheme}
+            aria-label="切换主题"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              border: 'none',
+              backgroundColor: 'transparent',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s',
+              color: 'var(--color-foreground)',
+              borderRadius: '4px',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-muted)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
         </nav>
       </div>
     </header>

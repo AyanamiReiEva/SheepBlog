@@ -3,8 +3,14 @@
 import Link from "next/link";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./theme-provider";
+import { Search } from "./search";
+import type { PostMetadata } from "@/lib/posts";
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  posts: PostMetadata[];
+}
+
+export function SiteHeader({ posts }: SiteHeaderProps) {
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -55,6 +61,7 @@ export function SiteHeader() {
           SheepBlog
         </Link>
         <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <Search posts={posts} />
           <Link href="/" style={{
             fontSize: '14px',
             textDecoration: 'none',

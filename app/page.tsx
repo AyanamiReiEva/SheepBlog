@@ -6,9 +6,9 @@ export default function Home() {
 
   return (
     <div style={{
-      maxWidth: '720px',
+      maxWidth: '900px',
       margin: '0 auto',
-      padding: '48px 16px',
+      padding: '48px 24px',
     }}>
       <div style={{ marginBottom: '48px' }}>
         <h1 style={{

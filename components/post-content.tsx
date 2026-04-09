@@ -35,13 +35,8 @@ export function PostContent({ metadata, content }: PostContentProps) {
           marginTop: '8px',
           marginBottom: '16px',
         }}>{metadata.title}</h1>
-        <p style={{
-          color: 'var(--color-muted-foreground)',
-          fontSize: '18px',
-          margin: 0,
-        }}>{metadata.description}</p>
         {metadata.tags.length > 0 && (
-          <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
             {metadata.tags.map((tag) => (
               <span
                 key={tag}

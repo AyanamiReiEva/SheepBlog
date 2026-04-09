@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "我的博客",
+  title: "SheepBlog",
   description: "一个极简风格的个人博客",
 };
 

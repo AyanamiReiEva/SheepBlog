@@ -11,9 +11,9 @@ interface PostContentProps {
 export function PostContent({ metadata, content }: PostContentProps) {
   return (
     <article style={{
-      maxWidth: '720px',
+      maxWidth: '900px',
       margin: '0 auto',
-      padding: '48px 16px',
+      padding: '48px 24px',
     }}>
       <BackLink href="/">← 返回首页</BackLink>
 

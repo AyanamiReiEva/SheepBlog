@@ -27,6 +27,7 @@ export function PostContent({ metadata, html }: PostContentProps) {
   });
   const [commentCount, setCommentCount] = useState(0);
   const [shared, setShared] = useState(false);
+  const [showCopyToast, setShowCopyToast] = useState(false);
   const [commentsExpanded, setCommentsExpanded] = useState(true);
 
   const handleLike = () => {
@@ -43,15 +44,16 @@ export function PostContent({ metadata, html }: PostContentProps) {
     }
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
     setShared(true);
     setTimeout(() => setShared(false), 2000);
-    if (navigator.share) {
-      navigator.share({
-        title: metadata.title,
-        text: metadata.description,
-        url: window.location.href,
-      });
+
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShowCopyToast(true);
+      setTimeout(() => setShowCopyToast(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
     }
   };
 
@@ -400,6 +402,41 @@ export function PostContent({ metadata, html }: PostContentProps) {
           onCommentCountChange={handleCommentCountChange}
         />
       </div>
+
+      {/* 复制成功提示 */}
+      {showCopyToast && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: 'var(--color-foreground)',
+            color: 'var(--color-background)',
+            padding: '12px 24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
+            zIndex: 1000,
+            fontSize: '14px',
+            fontWeight: 500,
+            animation: 'fadeInDown 0.3s ease',
+          }}
+        >
+          <style jsx global>{`
+            @keyframes fadeInDown {
+              from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+              }
+              to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+              }
+            }
+          `}</style>
+          链接已复制到剪贴板
+        </div>
+      )}
     </article>
   );
 }

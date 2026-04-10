@@ -2,6 +2,7 @@ import { getStorage } from '@/lib/storage';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import remarkGfm from 'remark-gfm';
+import { getAllViews, getViews } from '@/lib/views';
 
 export interface PostMetadata {
   title: string;
@@ -9,6 +10,7 @@ export interface PostMetadata {
   description: string;
   tags: string[];
   slug: string;
+  views?: number;
 }
 
 export function parseMetadata(fileContents: string, slug: string): PostMetadata {
@@ -58,13 +60,26 @@ export async function getAllPostSlugs() {
 export async function getPostMetadata(slug: string): Promise<PostMetadata> {
   const storage = getStorage();
   const fileContents = await storage.readFile(slug);
-  return parseMetadata(fileContents, slug);
+  const metadata = parseMetadata(fileContents, slug);
+  const views = await getViews(slug);
+  return { ...metadata, views };
 }
 
 export async function getAllPosts(): Promise<PostMetadata[]> {
   const slugs = await getAllPostSlugs();
-  const posts = await Promise.all(slugs.map((slug) => getPostMetadata(slug)));
+  const viewsData = await getAllViews();
+  const posts = await Promise.all(
+    slugs.map(async (slug) => {
+      const metadata = await getPostMetadata(slug);
+      return { ...metadata, views: viewsData[slug] || 0 };
+    })
+  );
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export async function getAllPostsSortedByViews(): Promise<PostMetadata[]> {
+  const posts = await getAllPosts();
+  return posts.sort((a, b) => (b.views || 0) - (a.views || 0));
 }
 
 export async function getPostContent(slug: string) {

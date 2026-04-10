@@ -1,30 +1,39 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { ArrowUp } from 'lucide-react';
+
+// 防抖函数
+function debounce<T extends (...args: unknown[]) => unknown>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 export function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
+  const toggleVisibility = useCallback(() => {
+    setIsVisible(window.pageYOffset > 300);
   }, []);
 
-  const scrollToTop = () => {
+  useEffect(() => {
+    const debouncedToggle = debounce(toggleVisibility, 50);
+    window.addEventListener('scroll', debouncedToggle, { passive: true });
+    return () => window.removeEventListener('scroll', debouncedToggle);
+  }, [toggleVisibility]);
+
+  const scrollToTop = useCallback(() => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
-  };
+  }, []);
 
   if (!isVisible) return null;
 
@@ -46,7 +55,8 @@ export function BackToTop() {
         alignItems: 'center',
         justifyContent: 'center',
         boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
-        transition: 'all 0.2s ease',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        willChange: 'transform',
         zIndex: 1000,
       }}
       onMouseEnter={(e) => {

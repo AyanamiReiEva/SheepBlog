@@ -155,13 +155,19 @@ export function PostContent({ metadata, html }: PostContentProps) {
               style={{
                 fontSize: '14px',
                 color: 'var(--color-muted-foreground)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
               }}
             >
-              {new Date(metadata.date).toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
+              <span>
+                {new Date(metadata.date).toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </span>
+              {metadata.views !== undefined && <span>• {metadata.views} 次浏览</span>}
             </div>
           </div>
         </div>

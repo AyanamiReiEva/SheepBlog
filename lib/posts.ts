@@ -66,15 +66,31 @@ export async function getPostMetadata(slug: string): Promise<PostMetadata> {
 }
 
 export async function getAllPosts(): Promise<PostMetadata[]> {
-  const slugs = await getAllPostSlugs();
-  const viewsData = await getAllViews();
-  const posts = await Promise.all(
-    slugs.map(async (slug) => {
-      const metadata = await getPostMetadata(slug);
-      return { ...metadata, views: viewsData[slug] || 0 };
-    })
-  );
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  try {
+    const slugs = await getAllPostSlugs();
+    const viewsData = await getAllViews();
+
+    // 并行获取所有文章元数据，但对单个失败的文章进行容错处理
+    const postPromises = slugs.map(async (slug) => {
+      try {
+        const metadata = await getPostMetadata(slug);
+        return { ...metadata, views: viewsData[slug] || 0 };
+      } catch (error) {
+        console.warn(`[getAllPosts] Failed to get metadata for slug "${slug}", skipping:`, error);
+        return null;
+      }
+    });
+
+    const results = await Promise.all(postPromises);
+    const posts = results.filter((post): post is PostMetadata => post !== null);
+
+    console.log(`[getAllPosts] Successfully loaded ${posts.length}/${slugs.length} posts`);
+    return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  } catch (error) {
+    console.error('[getAllPosts] Failed to get posts:', error);
+    // 即使失败也返回空数组，而不是抛出异常
+    return [];
+  }
 }
 
 export async function getAllPostsSortedByViews(): Promise<PostMetadata[]> {

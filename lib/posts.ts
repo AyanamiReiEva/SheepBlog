@@ -1,4 +1,7 @@
 import { getStorage } from '@/lib/storage';
+import { remark } from 'remark';
+import remarkHtml from 'remark-html';
+import remarkGfm from 'remark-gfm';
 
 export interface PostMetadata {
   title: string;
@@ -70,3 +73,13 @@ export async function getPostContent(slug: string) {
   return fileContents.replace(/---\n[\s\S]*?\n---\n/, '');
 }
 
+export async function renderMarkdownToHtml(markdown: string): Promise<string> {
+  const file = await remark()
+    .use(remarkGfm)
+    .use(remarkHtml, {
+      sanitize: false,
+    })
+    .process(markdown);
+
+  return String(file);
+}

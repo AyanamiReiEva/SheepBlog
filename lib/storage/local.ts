@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { StorageAdapter } from './types';
 
+const supportedExtensions = ['.mdx', '.md'];
+
 export class LocalStorageAdapter implements StorageAdapter {
   private postsDirectory: string;
 
@@ -21,22 +23,40 @@ export class LocalStorageAdapter implements StorageAdapter {
   async listFiles(): Promise<string[]> {
     const fileNames = await fs.promises.readdir(this.postsDirectory);
     return fileNames
-      .filter((fileName) => fileName.endsWith('.mdx'))
-      .map((fileName) => fileName.replace(/\.mdx$/, ''));
+      .filter((fileName) => supportedExtensions.some((ext) => fileName.endsWith(ext)))
+      .map((fileName) => {
+        for (const ext of supportedExtensions) {
+          if (fileName.endsWith(ext)) {
+            return fileName.slice(0, -ext.length);
+          }
+        }
+        return fileName;
+      });
+  }
+
+  private async findFilePath(slug: string): Promise<string | null> {
+    for (const ext of supportedExtensions) {
+      const fullPath = path.join(this.postsDirectory, `${slug}${ext}`);
+      try {
+        await fs.promises.access(fullPath);
+        return fullPath;
+      } catch {
+        continue;
+      }
+    }
+    return null;
   }
 
   async readFile(slug: string): Promise<string> {
-    const fullPath = path.join(this.postsDirectory, `${slug}.mdx`);
-    return await fs.promises.readFile(fullPath, 'utf8');
+    const filePath = await this.findFilePath(slug);
+    if (!filePath) {
+      throw new Error(`File not found for slug: ${slug}`);
+    }
+    return await fs.promises.readFile(filePath, 'utf8');
   }
 
   async fileExists(slug: string): Promise<boolean> {
-    const fullPath = path.join(this.postsDirectory, `${slug}.mdx`);
-    try {
-      await fs.promises.access(fullPath);
-      return true;
-    } catch {
-      return false;
-    }
+    const filePath = await this.findFilePath(slug);
+    return filePath !== null;
   }
 }

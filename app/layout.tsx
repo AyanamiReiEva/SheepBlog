@@ -15,12 +15,12 @@ export const metadata: Metadata = {
   description: "一个极简风格的个人博客",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
 
   return (
     <html lang="zh-CN" className={`${inter.className} antialiased`}>

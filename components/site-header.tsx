@@ -232,63 +232,95 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
             padding: '0 24px',
             display: 'flex',
             alignItems: 'center',
-            gap: '36px',
+            justifyContent: 'space-around',
             height: '56px',
           }}
         >
           <Link
             href="/"
             style={{
-              fontSize: '20px',
-              fontWeight: 700,
+              fontSize: '16px',
+              fontWeight: 500,
               textDecoration: 'none',
               color: 'var(--color-foreground)',
               transition: 'color 0.2s',
+              padding: '8px 16px',
+              borderRadius: '6px',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = 'var(--color-primary)';
+              e.currentTarget.style.backgroundColor = 'var(--color-muted)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'var(--color-foreground)';
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
           >
             首页
           </Link>
           <Link
             href="/notes"
             style={{
-              fontSize: '20px',
-              fontWeight: 400,
+              fontSize: '16px',
+              fontWeight: 500,
               textDecoration: 'none',
               color: 'var(--color-foreground)',
               transition: 'color 0.2s',
+              padding: '8px 16px',
+              borderRadius: '6px',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = 'var(--color-primary)';
+              e.currentTarget.style.backgroundColor = 'var(--color-muted)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'var(--color-foreground)';
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
           >
             笔记
           </Link>
           <Link
             href="/about"
             style={{
-              fontSize: '20px',
-              fontWeight: 400,
+              fontSize: '16px',
+              fontWeight: 500,
               textDecoration: 'none',
               color: 'var(--color-foreground)',
               transition: 'color 0.2s',
+              padding: '8px 16px',
+              borderRadius: '6px',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = 'var(--color-primary)';
+              e.currentTarget.style.backgroundColor = 'var(--color-muted)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'var(--color-foreground)';
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
           >
             关于
           </Link>
           <Link
             href="/changelog"
             style={{
-              fontSize: '20px',
-              fontWeight: 400,
+              fontSize: '16px',
+              fontWeight: 500,
               textDecoration: 'none',
               color: 'var(--color-foreground)',
               transition: 'color 0.2s',
+              padding: '8px 16px',
+              borderRadius: '6px',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = 'var(--color-primary)';
+              e.currentTarget.style.backgroundColor = 'var(--color-muted)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'var(--color-foreground)';
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
           >
             改动日志
           </Link>

@@ -3,6 +3,7 @@ import { StorageAdapter } from './types';
 import { LocalStorageAdapter } from './local';
 import { JianguoyunStorageAdapter, JianguoyunConfig } from './jianguoyun';
 import { FallbackStorageAdapter } from './fallback';
+import { CachedStorageAdapter } from './cached';
 
 let storageInstance: StorageAdapter | null = null;
 
@@ -22,17 +23,25 @@ function createJianguoyunAdapter(): JianguoyunStorageAdapter {
 function createStorageAdapter(): StorageAdapter {
   const localAdapter = new LocalStorageAdapter();
 
+  let adapter: StorageAdapter;
+
   if (config.storage.primary === 'jianguoyun') {
     try {
       const jianguoyunAdapter = createJianguoyunAdapter();
-      return new FallbackStorageAdapter(jianguoyunAdapter, localAdapter);
+      adapter = new FallbackStorageAdapter(jianguoyunAdapter, localAdapter);
     } catch (error) {
-      console.warn('Failed to initialize Jianguoyun storage, falling back to local storage:', error);
-      return localAdapter;
+      console.warn(
+        'Failed to initialize Jianguoyun storage, falling back to local storage:',
+        error
+      );
+      adapter = localAdapter;
     }
+  } else {
+    adapter = localAdapter;
   }
 
-  return localAdapter;
+  // 添加缓存包装，60秒缓存
+  return new CachedStorageAdapter(adapter, 60);
 }
 
 export function getStorage(): StorageAdapter {

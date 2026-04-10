@@ -6,9 +6,10 @@ import type { PostMetadata } from '@/lib/posts';
 
 interface HomeClientProps {
   posts: PostMetadata[];
+  postsSortedByViews: PostMetadata[];
 }
 
-export function HomeClient({ posts }: HomeClientProps) {
+export function HomeClient({ posts, postsSortedByViews }: HomeClientProps) {
   const [activeTab, setActiveTab] = useState<'latest' | 'popular'>('latest');
 
   return (
@@ -61,7 +62,7 @@ export function HomeClient({ posts }: HomeClientProps) {
               gap: '24px',
             }}
           >
-            {posts.slice(0, 3).map((post) => (
+            {postsSortedByViews.slice(0, 3).map((post) => (
               <PopularCard key={post.slug} post={post} />
             ))}
           </div>
@@ -138,7 +139,7 @@ export function HomeClient({ posts }: HomeClientProps) {
               讨论
             </button>
           </div>
-          <PostList posts={posts} />
+          <PostList posts={activeTab === 'latest' ? posts : postsSortedByViews} />
         </section>
       </div>
 
@@ -256,12 +257,18 @@ function PopularCard({ post }: { post: PostMetadata }) {
               fontSize: '12px',
               color: 'var(--color-muted-foreground)',
               margin: '0 0 8px 0',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
           >
-            {new Date(post.date).toLocaleDateString('zh-CN', {
-              year: 'numeric',
-              month: 'short',
-            })}
+            <span>
+              {new Date(post.date).toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'short',
+              })}
+            </span>
+            {post.views !== undefined && <span>• {post.views} 浏览</span>}
           </p>
           <h4
             style={{

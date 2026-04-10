@@ -1,6 +1,8 @@
 import { createClient, WebDAVClient } from 'webdav';
 import { StorageAdapter } from './types';
 
+const supportedExtensions = ['.mdx', '.md'];
+
 export interface JianguoyunConfig {
   webdavUrl: string;
   username: string;
@@ -34,8 +36,18 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
       const contents = await this.client.getDirectoryContents(this.config.basePath);
       if (Array.isArray(contents)) {
         return contents
-          .filter((item) => item.type === 'file' && item.basename.endsWith('.mdx'))
-          .map((item) => item.basename.replace(/\.mdx$/, ''));
+          .filter(
+            (item) =>
+              item.type === 'file' && supportedExtensions.some((ext) => item.basename.endsWith(ext))
+          )
+          .map((item) => {
+            for (const ext of supportedExtensions) {
+              if (item.basename.endsWith(ext)) {
+                return item.basename.slice(0, -ext.length);
+              }
+            }
+            return item.basename;
+          });
       }
       return [];
     } catch (error) {
@@ -44,9 +56,27 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
     }
   }
 
+  private async findFilePath(slug: string): Promise<string | null> {
+    for (const ext of supportedExtensions) {
+      const filePath = `${this.config.basePath}/${slug}${ext}`;
+      try {
+        const exists = await this.client.exists(filePath);
+        if (exists) {
+          return filePath;
+        }
+      } catch {
+        continue;
+      }
+    }
+    return null;
+  }
+
   async readFile(slug: string): Promise<string> {
     try {
-      const filePath = `${this.config.basePath}/${slug}.mdx`;
+      const filePath = await this.findFilePath(slug);
+      if (!filePath) {
+        throw new Error(`File not found for slug: ${slug}`);
+      }
       const content = await this.client.getFileContents(filePath, { format: 'text' });
       return content as string;
     } catch (error) {
@@ -57,8 +87,8 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
 
   async fileExists(slug: string): Promise<boolean> {
     try {
-      const filePath = `${this.config.basePath}/${slug}.mdx`;
-      return await this.client.exists(filePath);
+      const filePath = await this.findFilePath(slug);
+      return filePath !== null;
     } catch {
       return false;
     }

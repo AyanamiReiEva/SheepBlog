@@ -33,9 +33,10 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
 
   async listFiles(): Promise<string[]> {
     try {
+      console.log(`[Jianguoyun] Listing files from ${this.config.basePath}`);
       const contents = await this.client.getDirectoryContents(this.config.basePath);
       if (Array.isArray(contents)) {
-        return contents
+        const files = contents
           .filter(
             (item) =>
               item.type === 'file' && supportedExtensions.some((ext) => item.basename.endsWith(ext))
@@ -48,10 +49,13 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
             }
             return item.basename;
           });
+        console.log(`[Jianguoyun] Found ${files.length} files:`, files);
+        return files;
       }
+      console.log(`[Jianguoyun] No files found (contents not an array)`);
       return [];
     } catch (error) {
-      console.error('Failed to list files from Jianguoyun:', error);
+      console.error('[Jianguoyun] Failed to list files:', error);
       throw error;
     }
   }
@@ -80,7 +84,9 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
       if (!filePath) {
         throw new Error(`File not found for slug: ${slug}`);
       }
-      const content = await this.client.getFileContents(filePath, { format: 'text' });
+      const content = await this.client.getFileContents(filePath, {
+        format: 'text',
+      });
       return content as string;
     } catch (error) {
       console.error(`Failed to read file ${slug} from Jianguoyun:`, error);

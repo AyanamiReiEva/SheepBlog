@@ -3,60 +3,66 @@ import { StorageAdapter } from './types';
 export class FallbackStorageAdapter implements StorageAdapter {
   private primary: StorageAdapter;
   private fallback: StorageAdapter;
-  private usingFallback: boolean = false;
 
   constructor(primary: StorageAdapter, fallback: StorageAdapter) {
     this.primary = primary;
     this.fallback = fallback;
   }
 
-  private async withFallback<T>(
-    operation: (adapter: StorageAdapter) => Promise<T>,
-    operationName: string
-  ): Promise<T> {
-    if (!this.usingFallback) {
-      try {
-        return await operation(this.primary);
-      } catch (error) {
-        console.warn(`Primary storage failed for ${operationName}, falling back to local storage:`, error);
-        this.usingFallback = true;
-      }
-    }
-    return await operation(this.fallback);
-  }
-
   async isAvailable(): Promise<boolean> {
     const primaryAvailable = await this.primary.isAvailable();
-    if (primaryAvailable) {
-      this.usingFallback = false;
-      return true;
-    }
-    this.usingFallback = true;
-    return await this.fallback.isAvailable();
+    const fallbackAvailable = await this.fallback.isAvailable();
+    return primaryAvailable || fallbackAvailable;
   }
 
   async listFiles(): Promise<string[]> {
-    return this.withFallback(
-      (adapter) => adapter.listFiles(),
-      'listFiles'
-    );
+    const [primaryFiles, fallbackFiles] = await Promise.allSettled([
+      this.primary.listFiles(),
+      this.fallback.listFiles(),
+    ]);
+
+    const files = new Set<string>();
+
+    if (primaryFiles.status === 'fulfilled') {
+      primaryFiles.value.forEach((file) => files.add(file));
+    } else {
+      console.warn('Primary storage failed for listFiles:', primaryFiles.reason);
+    }
+
+    if (fallbackFiles.status === 'fulfilled') {
+      fallbackFiles.value.forEach((file) => files.add(file));
+    }
+
+    return Array.from(files);
   }
 
   async readFile(path: string): Promise<string> {
-    return this.withFallback(
-      (adapter) => adapter.readFile(path),
-      `readFile(${path})`
-    );
+    // 先尝试主存储
+    try {
+      const primaryExists = await this.primary.fileExists(path);
+      if (primaryExists) {
+        return await this.primary.readFile(path);
+      }
+    } catch (error) {
+      console.warn(`Primary storage failed for readFile(${path}):`, error);
+    }
+
+    // 回退到备用存储
+    return await this.fallback.readFile(path);
   }
 
   async fileExists(path: string): Promise<boolean> {
-    return this.withFallback(
-      (adapter) => adapter.fileExists(path),
-      `fileExists(${path})`
-    );
-  }
+    // 先检查主存储
+    try {
+      const primaryExists = await this.primary.fileExists(path);
+      if (primaryExists) {
+        return true;
+      }
+    } catch (error) {
+      console.warn(`Primary storage failed for fileExists(${path}):`, error);
+    }
 
-  isUsingFallback(): boolean {
-    return this.usingFallback;
+    // 再检查备用存储
+    return await this.fallback.fileExists(path);
   }
 }

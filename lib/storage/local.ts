@@ -21,8 +21,9 @@ export class LocalStorageAdapter implements StorageAdapter {
   }
 
   async listFiles(): Promise<string[]> {
+    console.log(`[LocalStorage] Listing files from ${this.postsDirectory}`);
     const fileNames = await fs.promises.readdir(this.postsDirectory);
-    return fileNames
+    const files = fileNames
       .filter((fileName) => supportedExtensions.some((ext) => fileName.endsWith(ext)))
       .map((fileName) => {
         for (const ext of supportedExtensions) {
@@ -32,6 +33,8 @@ export class LocalStorageAdapter implements StorageAdapter {
         }
         return fileName;
       });
+    console.log(`[LocalStorage] Found ${files.length} files:`, files);
+    return files;
   }
 
   private async findFilePath(slug: string): Promise<string | null> {

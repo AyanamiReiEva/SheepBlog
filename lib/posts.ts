@@ -1,5 +1,4 @@
-import fs from 'fs';
-import path from 'path';
+import { getStorage } from '@/lib/storage';
 
 export interface PostMetadata {
   title: string;
@@ -9,17 +8,7 @@ export interface PostMetadata {
   slug: string;
 }
 
-const postsDirectory = path.join(process.cwd(), 'content', 'posts');
-
-export function getAllPostSlugs() {
-  const fileNames = fs.readdirSync(postsDirectory);
-  return fileNames.map((fileName) => fileName.replace(/\.mdx$/, ''));
-}
-
-export function getPostMetadata(slug: string): PostMetadata {
-  const fullPath = path.join(postsDirectory, `${slug}.mdx`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-
+function parseMetadata(fileContents: string, slug: string): PostMetadata {
   const metadataMatch = fileContents.match(/---\n([\s\S]*?)\n---/);
   if (!metadataMatch) {
     throw new Error(`Post ${slug} has no metadata`);
@@ -40,14 +29,26 @@ export function getPostMetadata(slug: string): PostMetadata {
   };
 }
 
-export function getAllPosts(): PostMetadata[] {
-  const slugs = getAllPostSlugs();
-  const posts = slugs.map((slug) => getPostMetadata(slug));
+export async function getAllPostSlugs() {
+  const storage = getStorage();
+  return await storage.listFiles();
+}
+
+export async function getPostMetadata(slug: string): Promise<PostMetadata> {
+  const storage = getStorage();
+  const fileContents = await storage.readFile(slug);
+  return parseMetadata(fileContents, slug);
+}
+
+export async function getAllPosts(): Promise<PostMetadata[]> {
+  const slugs = await getAllPostSlugs();
+  const posts = await Promise.all(slugs.map((slug) => getPostMetadata(slug)));
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
-export function getPostContent(slug: string) {
-  const fullPath = path.join(postsDirectory, `${slug}.mdx`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
+export async function getPostContent(slug: string) {
+  const storage = getStorage();
+  const fileContents = await storage.readFile(slug);
   return fileContents.replace(/---\n[\s\S]*?\n---\n/, '');
 }
+

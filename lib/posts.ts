@@ -8,23 +8,41 @@ export interface PostMetadata {
   slug: string;
 }
 
-function parseMetadata(fileContents: string, slug: string): PostMetadata {
-  const metadataMatch = fileContents.match(/---\n([\s\S]*?)\n---/);
-  if (!metadataMatch) {
-    throw new Error(`Post ${slug} has no metadata`);
+export function parseMetadata(fileContents: string, slug: string): PostMetadata {
+  // 只检查文件开头的 frontmatter（必须在第一行）
+  if (fileContents.trimStart().startsWith('---')) {
+    const metadataMatch = fileContents.match(/^---\n([\s\S]*?)\n---/);
+    if (metadataMatch) {
+      const metadata = metadataMatch[1];
+      const titleMatch = metadata.match(/title:\s*"([^"]+)"/);
+      const dateMatch = metadata.match(/date:\s*"([^"]+)"/);
+      const descriptionMatch = metadata.match(/description:\s*"([^"]+)"/);
+      const tagsMatch = metadata.match(/tags:\s*\[([^\]]+)\]/);
+
+      return {
+        title: titleMatch ? titleMatch[1] : '',
+        date: dateMatch ? dateMatch[1] : '',
+        description: descriptionMatch ? descriptionMatch[1] : '',
+        tags: tagsMatch ? tagsMatch[1].split(',').map((t) => t.trim().replace(/"/g, '')) : [],
+        slug,
+      };
+    }
   }
 
-  const metadata = metadataMatch[1];
-  const titleMatch = metadata.match(/title:\s*"([^"]+)"/);
-  const dateMatch = metadata.match(/date:\s*"([^"]+)"/);
-  const descriptionMatch = metadata.match(/description:\s*"([^"]+)"/);
-  const tagsMatch = metadata.match(/tags:\s*\[([^\]]+)\]/);
+  // 如果没有 frontmatter，从内容中提取信息
+  const titleMatch = fileContents.match(/^#\s+(.+)$/m);
+  const title = titleMatch ? titleMatch[1].trim() : slug;
+
+  // 从内容中提取前几行作为描述
+  const contentWithoutTitle = fileContents.replace(/^#\s+.+$/m, '').trim();
+  const firstParagraph = contentWithoutTitle.split('\n').find((p) => p.trim().length > 0) || '';
+  const description = firstParagraph.substring(0, 150) + (firstParagraph.length > 150 ? '...' : '');
 
   return {
-    title: titleMatch ? titleMatch[1] : '',
-    date: dateMatch ? dateMatch[1] : '',
-    description: descriptionMatch ? descriptionMatch[1] : '',
-    tags: tagsMatch ? tagsMatch[1].split(',').map((t) => t.trim().replace(/"/g, '')) : [],
+    title,
+    date: new Date().toISOString().split('T')[0],
+    description,
+    tags: [],
     slug,
   };
 }

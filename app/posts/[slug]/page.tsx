@@ -3,7 +3,7 @@ import { getPostMetadata, getPostContent, getAllPostSlugs } from "@/lib/posts";
 import { PostContent } from "@/components/post-content";
 
 export async function generateStaticParams() {
-  const slugs = getAllPostSlugs();
+  const slugs = await getAllPostSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
@@ -13,8 +13,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   let content;
 
   try {
-    metadata = getPostMetadata(slug);
-    content = getPostContent(slug);
+    metadata = await getPostMetadata(slug);
+    content = await getPostContent(slug);
   } catch {
     notFound();
   }

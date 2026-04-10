@@ -39,15 +39,23 @@ export class FallbackStorageAdapter implements StorageAdapter {
   async readFile(path: string): Promise<string> {
     // 先尝试主存储
     try {
-      const primaryExists = await this.primary.fileExists(path);
-      if (primaryExists) {
-        return await this.primary.readFile(path);
+      const primaryAvailable = await this.primary.isAvailable();
+      if (primaryAvailable) {
+        try {
+          const primaryExists = await this.primary.fileExists(path);
+          if (primaryExists) {
+            return await this.primary.readFile(path);
+          }
+        } catch (error) {
+          console.warn(`Primary storage file check failed for readFile(${path}):`, error);
+        }
       }
     } catch (error) {
-      console.warn(`Primary storage failed for readFile(${path}):`, error);
+      console.warn(`Primary storage availability check failed:`, error);
     }
 
     // 回退到备用存储
+    console.log(`Falling back to local storage for file: ${path}`);
     return await this.fallback.readFile(path);
   }
 

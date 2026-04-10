@@ -61,20 +61,39 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
   }
 
   private async findFilePath(slug: string): Promise<string | null> {
+    console.log(`[Jianguoyun] Looking for file with slug: "${slug}"`);
+    const cleanBasePath = this.config.basePath.endsWith('/')
+      ? this.config.basePath.slice(0, -1)
+      : this.config.basePath;
+
+    // 先列出所有文件，看看实际有什么
+    try {
+      const contents = await this.client.getDirectoryContents(this.config.basePath);
+      if (Array.isArray(contents)) {
+        console.log(
+          '[Jianguoyun] Files in directory:',
+          contents.map((item) => item.basename)
+        );
+      }
+    } catch (error) {
+      console.warn('[Jianguoyun] Failed to list directory for debugging:', error);
+    }
+
     for (const ext of supportedExtensions) {
-      const cleanBasePath = this.config.basePath.endsWith('/')
-        ? this.config.basePath.slice(0, -1)
-        : this.config.basePath;
       const filePath = `${cleanBasePath}/${slug}${ext}`;
+      console.log(`[Jianguoyun] Checking path: ${filePath}`);
       try {
         const exists = await this.client.exists(filePath);
+        console.log(`[Jianguoyun] Path ${filePath} exists: ${exists}`);
         if (exists) {
           return filePath;
         }
-      } catch {
+      } catch (error) {
+        console.warn(`[Jianguoyun] Error checking path ${filePath}:`, error);
         continue;
       }
     }
+    console.log(`[Jianguoyun] No file found for slug: ${slug}`);
     return null;
   }
 
@@ -84,6 +103,7 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
       if (!filePath) {
         throw new Error(`File not found for slug: ${slug}`);
       }
+      console.log(`[Jianguoyun] Reading file from: ${filePath}`);
       const content = await this.client.getFileContents(filePath, {
         format: 'text',
       });

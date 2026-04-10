@@ -66,7 +66,7 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
       ? this.config.basePath.slice(0, -1)
       : this.config.basePath;
 
-    // 先列出所有文件，看看实际有什么
+    // 先列出所有文件，看看实际有什么，并尝试直接匹配
     try {
       const contents = await this.client.getDirectoryContents(this.config.basePath);
       if (Array.isArray(contents)) {
@@ -74,11 +74,27 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
           '[Jianguoyun] Files in directory:',
           contents.map((item) => item.basename)
         );
+
+        // 直接在列出的文件中查找匹配的
+        for (const item of contents) {
+          if (item.type === 'file') {
+            for (const ext of supportedExtensions) {
+              if (item.basename === `${slug}${ext}`) {
+                console.log(`[Jianguoyun] Found exact match: ${item.basename}`);
+                const cleanBasePath = this.config.basePath.endsWith('/')
+                  ? this.config.basePath.slice(0, -1)
+                  : this.config.basePath;
+                return `${cleanBasePath}/${item.basename}`;
+              }
+            }
+          }
+        }
       }
     } catch (error) {
       console.warn('[Jianguoyun] Failed to list directory for debugging:', error);
     }
 
+    // 如果直接匹配没找到，再尝试原来的方法
     for (const ext of supportedExtensions) {
       const filePath = `${cleanBasePath}/${slug}${ext}`;
       console.log(`[Jianguoyun] Checking path: ${filePath}`);

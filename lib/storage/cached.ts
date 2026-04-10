@@ -27,32 +27,21 @@ export class CachedStorageAdapter implements StorageAdapter {
   }
 
   async listFiles(): Promise<string[]> {
-    if (this.listFilesCache && !this.isExpired(this.listFilesCache)) {
-      return this.listFilesCache.value;
-    }
-
+    // 暂时禁用缓存以便调试
     const files = await this.adapter.listFiles();
     this.listFilesCache = { value: files, timestamp: Date.now() };
     return files;
   }
 
   async readFile(slug: string): Promise<string> {
-    const cached = this.fileContentCache.get(slug);
-    if (cached && !this.isExpired(cached)) {
-      return cached.value;
-    }
-
+    // 暂时禁用缓存以便调试
     const content = await this.adapter.readFile(slug);
     this.fileContentCache.set(slug, { value: content, timestamp: Date.now() });
     return content;
   }
 
   async fileExists(slug: string): Promise<boolean> {
-    const cached = this.fileExistsCache.get(slug);
-    if (cached && !this.isExpired(cached)) {
-      return cached.value;
-    }
-
+    // 暂时禁用缓存以便调试
     const exists = await this.adapter.fileExists(slug);
     this.fileExistsCache.set(slug, { value: exists, timestamp: Date.now() });
     return exists;

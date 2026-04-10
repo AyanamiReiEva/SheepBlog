@@ -21,6 +21,18 @@ export const config = {
     contentDir: 'content',
   },
 
+  // 存储配置
+  storage: {
+    primary: (process.env.STORAGE_PRIMARY || 'local') as 'local' | 'jianguoyun',
+    fallback: 'local' as const,
+    jianguoyun: {
+      webdavUrl: process.env.JIANGUOYUN_WEBDAV_URL || 'https://dav.jianguoyun.com/dav/',
+      username: process.env.JIANGUOYUN_USERNAME || '',
+      password: process.env.JIANGUOYUN_PASSWORD || '',
+      basePath: process.env.JIANGUOYUN_BASE_PATH || '/myblog/posts/',
+    },
+  },
+
   // AI开发流水线配置
   pipeline: {
     memoryDir: '.ai-dev/memory',

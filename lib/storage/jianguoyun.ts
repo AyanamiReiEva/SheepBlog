@@ -56,6 +56,7 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
       return [];
     } catch (error) {
       console.error('[Jianguoyun] Failed to list files:', error);
+      // 重新抛出错误，让 FallbackStorageAdapter 处理回退
       throw error;
     }
   }

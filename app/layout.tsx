@@ -5,7 +5,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { BackToTop } from '@/components/back-to-top';
-import { getAllPosts } from '@/lib/posts';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -21,13 +20,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const posts = await getAllPosts();
-
   return (
     <html lang="zh-CN" className={`${inter.className} antialiased`}>
       <body>
         <ThemeProvider>
-          <SiteHeader posts={posts} />
+          <SiteHeader />
           <main>{children}</main>
           <SiteFooter />
           <BackToTop />

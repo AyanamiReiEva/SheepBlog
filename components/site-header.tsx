@@ -3,13 +3,8 @@
 import Link from 'next/link';
 import { Moon, Sun, Search, Upload } from 'lucide-react';
 import { useTheme } from './theme-provider';
-import type { PostMetadata } from '@/lib/posts';
 
-interface SiteHeaderProps {
-  posts: PostMetadata[];
-}
-
-export function SiteHeader({ posts }: SiteHeaderProps) {
+export function SiteHeader() {
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -55,7 +50,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
               gap: '12px',
             }}
             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '')}
           >
             <svg
               width="36"
@@ -132,7 +127,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
                 borderRadius: '8px',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-muted)')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
             >
               <Search size={24} />
             </button>
@@ -153,7 +148,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
                 borderRadius: '8px',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-muted)')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
             >
               <Upload size={24} />
             </button>
@@ -174,7 +169,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
                 transition: 'background-color 0.2s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#aa0000')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#cc0000')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
             >
               订阅
             </Link>
@@ -189,7 +184,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
                 transition: 'color 0.2s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '')}
             >
               登录
             </Link>
@@ -211,7 +206,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
                 borderRadius: '8px',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-muted)')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
             >
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             </button>
@@ -253,7 +248,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--color-foreground)';
-              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.backgroundColor = '';
             }}
           >
             首页
@@ -275,7 +270,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--color-foreground)';
-              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.backgroundColor = '';
             }}
           >
             笔记
@@ -297,7 +292,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--color-foreground)';
-              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.backgroundColor = '';
             }}
           >
             关于
@@ -319,7 +314,7 @@ export function SiteHeader({ posts }: SiteHeaderProps) {
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--color-foreground)';
-              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.backgroundColor = '';
             }}
           >
             改动日志

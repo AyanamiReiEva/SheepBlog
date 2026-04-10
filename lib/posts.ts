@@ -70,7 +70,10 @@ export async function getAllPosts(): Promise<PostMetadata[]> {
 export async function getPostContent(slug: string) {
   const storage = getStorage();
   const fileContents = await storage.readFile(slug);
-  return fileContents.replace(/---\n[\s\S]*?\n---\n/, '');
+  let content = fileContents.replace(/---\n[\s\S]*?\n---\n/, '');
+  // 移除开头的标题（# 标题），因为页面会单独显示标题
+  content = content.replace(/^#\s+.+(\n|$)/, '').trimStart();
+  return content;
 }
 
 export async function renderMarkdownToHtml(markdown: string): Promise<string> {

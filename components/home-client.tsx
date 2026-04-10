@@ -228,15 +228,16 @@ function PopularCard({ post }: { post: PostMetadata }) {
           border: '1px solid var(--color-border)',
           borderRadius: '8px',
           overflow: 'hidden',
-          transition: 'box-shadow 0.2s, transform 0.2s',
+          transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+          willChange: 'transform',
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
           e.currentTarget.style.transform = 'translateY(-2px)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.boxShadow = 'none';
-          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '';
+          e.currentTarget.style.transform = '';
         }}
       >
         <div

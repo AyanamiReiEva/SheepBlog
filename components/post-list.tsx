@@ -27,13 +27,13 @@ export function PostList({ posts }: PostListProps) {
                 padding: '24px 0',
                 borderBottom: '1px solid var(--color-border)',
                 backgroundColor: 'var(--color-background)',
-                transition: 'background-color 0.2s',
+                transition: 'background-color 0.15s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = 'var(--color-muted)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-background)';
+                e.currentTarget.style.backgroundColor = '';
               }}
             >
               {/* 缩略图占位 */}

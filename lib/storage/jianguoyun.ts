@@ -58,7 +58,10 @@ export class JianguoyunStorageAdapter implements StorageAdapter {
 
   private async findFilePath(slug: string): Promise<string | null> {
     for (const ext of supportedExtensions) {
-      const filePath = `${this.config.basePath}/${slug}${ext}`;
+      const cleanBasePath = this.config.basePath.endsWith('/')
+        ? this.config.basePath.slice(0, -1)
+        : this.config.basePath;
+      const filePath = `${cleanBasePath}/${slug}${ext}`;
       try {
         const exists = await this.client.exists(filePath);
         if (exists) {

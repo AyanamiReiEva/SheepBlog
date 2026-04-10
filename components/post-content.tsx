@@ -49,7 +49,20 @@ export function PostContent({ metadata, html }: PostContentProps) {
     setTimeout(() => setShared(false), 2000);
 
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      const url = window.location.href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        // 降级方案：使用传统方法
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
       setShowCopyToast(true);
       setTimeout(() => setShowCopyToast(false), 2000);
     } catch (err) {

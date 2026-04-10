@@ -45,21 +45,23 @@ export class FallbackStorageAdapter implements StorageAdapter {
   }
 
   async readFile(path: string): Promise<string> {
-    // 先尝试主存储，简化流程，减少网络请求
+    // 先检查主存储中文件是否存在
     try {
-      return await this.primary.readFile(path);
-    } catch (primaryError) {
-      console.warn(`Primary storage failed for readFile(${path}), falling back:`, primaryError);
+      const primaryExists = await this.primary.fileExists(path);
+      if (primaryExists) {
+        try {
+          return await this.primary.readFile(path);
+        } catch (error) {
+          console.warn(`Primary storage file exists but read failed for ${path}:`, error);
+        }
+      }
+    } catch (error) {
+      console.warn(`Primary storage fileExists check failed for ${path}:`, error);
     }
 
     // 回退到备用存储
-    try {
-      console.log(`Falling back to local storage for file: ${path}`);
-      return await this.fallback.readFile(path);
-    } catch (fallbackError) {
-      console.error(`Both storages failed for readFile(${path}):`, fallbackError);
-      throw fallbackError;
-    }
+    console.log(`Falling back to local storage for file: ${path}`);
+    return await this.fallback.readFile(path);
   }
 
   async fileExists(path: string): Promise<boolean> {
@@ -74,6 +76,11 @@ export class FallbackStorageAdapter implements StorageAdapter {
     }
 
     // 再检查备用存储
-    return await this.fallback.fileExists(path);
+    try {
+      return await this.fallback.fileExists(path);
+    } catch (error) {
+      console.warn(`Fallback storage also failed for fileExists(${path}):`, error);
+      return false;
+    }
   }
 }
